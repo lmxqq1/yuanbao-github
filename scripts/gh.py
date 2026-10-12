@@ -163,10 +163,12 @@ def cmd_repo(a):
 
     if a.action == "edit":
         body = {}
-        for k in ("description", "homepage", "name"):
+        for k in ("description", "homepage"):
             v = getattr(a, k, None)
             if v is not None:
                 body[k] = v
+        if getattr(a, "new_name", None):
+            body["name"] = a.new_name
         if a.private is True:
             body["private"] = True
         elif a.public is True:
@@ -569,7 +571,8 @@ def build_parser():
     g.add_argument("--gitignore"); g.add_argument("--license"); g.add_argument("--org"); g.add_argument("--homepage")
     g = add(s2, "delete"); g.add_argument("owner"); g.add_argument("name")
     g = add(s2, "edit"); g.add_argument("owner"); g.add_argument("name")
-    g.add_argument("--description"); g.add_argument("--name"); g.add_argument("--homepage")
+    g.add_argument("--description"); g.add_argument("--new-name", dest="new_name")
+    g.add_argument("--homepage")
     g.add_argument("--private", action="store_true"); g.add_argument("--public", action="store_true")
     g = add(s2, "tree"); g.add_argument("owner"); g.add_argument("name")
     g.add_argument("--path"); g.add_argument("--ref")

@@ -118,6 +118,7 @@ def _safe_json(payload):
 def api(method, path, token=None, body=None, accept="application/vnd.github+json",
         params=None, raw_text=False, timeout=30, allow_404=False):
     url = API + path if path.startswith("/") else path
+    url = urllib.parse.quote(url, safe="/:?&=%,+")
     if params:
         url += "?" + urllib.parse.urlencode({k: v for k, v in params.items() if v is not None})
     status, data, hdrs = _request(method, url, token, body, accept, raw_text, timeout)
