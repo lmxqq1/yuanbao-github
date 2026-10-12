@@ -42,6 +42,7 @@ python3 scripts/gh.py auth logout
 | 我的/某人仓库 | `repo list [--user <login>] --limit 30 --md` |
 | 建仓库（添加库） | `repo create <name> [--description ""] [--private] [--auto-init] [--gitignore Python] [--license MIT] [--org <组织>]` |
 | 删仓库 | `repo delete <owner> <repo>` |
+| 改仓库信息 | `repo edit <owner> <repo> [--description ""] [--name 新名] [--homepage] [--private\|--public]` |
 | 文件树 | `repo tree <owner> <repo> [--path src] [--ref <分支>] --limit 100 --md` |
 | README | `repo readme <owner> <repo> --max-bytes N` |
 | 分支 / 提交历史 | `repo branches`、`repo commits <owner> <repo> [--ref] [--path]` |

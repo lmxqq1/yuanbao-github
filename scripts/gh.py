@@ -161,6 +161,25 @@ def cmd_repo(a):
         j({"ok": True, "deleted": "%s/%s" % (a.owner, a.name)})
         return
 
+    if a.action == "edit":
+        body = {}
+        for k in ("description", "homepage", "name"):
+            v = getattr(a, k, None)
+            if v is not None:
+                body[k] = v
+        if a.private is True:
+            body["private"] = True
+        elif a.public is True:
+            body["private"] = False
+        if not body:
+            sys.stderr.write("ERR: repo edit 至少给一个待改字段（--description/--name/--homepage/--private/--public）。\n")
+            sys.exit(8)
+        d, _ = G.api("PATCH", "/repos/%s/%s" % (a.owner, a.name), token=token, body=body)
+        j({"ok": True, "full_name": d.get("full_name"), "name": d.get("name"),
+           "description": d.get("description"), "html_url": d.get("html_url"),
+           "private": d.get("private")})
+        return
+
     if a.action == "tree":
         br = default_branch(a.owner, a.name, token, a.ref)
         d, _ = G.api("GET", "/repos/%s/%s/git/trees/%s" % (a.owner, a.name, br),
@@ -511,7 +530,7 @@ def cmd_run(a):
 
 # ==========================================================================
 WRITE_ACTIONS = {
-    ("repo", "create"), ("repo", "delete"), ("repo", "star"),
+    ("repo", "create"), ("repo", "delete"), ("repo", "edit"), ("repo", "star"),
     ("file", "put"), ("file", "delete"), ("commit", "push"),
     ("issue", "create"), ("issue", "comment"), ("issue", "close"),
     ("pr", "create"), ("pr", "comment"), ("pr", "merge"),
@@ -549,6 +568,9 @@ def build_parser():
     g.add_argument("--private", action="store_true"); g.add_argument("--auto-init", action="store_true")
     g.add_argument("--gitignore"); g.add_argument("--license"); g.add_argument("--org"); g.add_argument("--homepage")
     g = add(s2, "delete"); g.add_argument("owner"); g.add_argument("name")
+    g = add(s2, "edit"); g.add_argument("owner"); g.add_argument("name")
+    g.add_argument("--description"); g.add_argument("--name"); g.add_argument("--homepage")
+    g.add_argument("--private", action="store_true"); g.add_argument("--public", action="store_true")
     g = add(s2, "tree"); g.add_argument("owner"); g.add_argument("name")
     g.add_argument("--path"); g.add_argument("--ref")
     g = add(s2, "readme"); g.add_argument("owner"); g.add_argument("name")

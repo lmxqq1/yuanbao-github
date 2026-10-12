@@ -1,4 +1,4 @@
-# yuanbao-github-skill
+# 元宝连接github（skill）
 
 元宝（Yuanbao）的 GitHub Skill：连接你的 GitHub 账号，在对话里直接查仓库、读代码、管 issue / PR、搜索项目、上传文件并自动提交。
 
